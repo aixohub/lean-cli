@@ -79,6 +79,8 @@ class ModuleManager:
             if module_version and package.version.split('.')[-1] != module_version:
                 self._logger.debug(f'Package "{package.name}" does not have the specified version {module_version}. '
                                    f'Using available version {package.version} instead.')
+            if package.name== "QuantConnect.Brokerages.InteractiveBrokers":
+                package.version= "2.5.16913"
             self._download_file(product_id, organization_id, package)
 
         self._installed_product_ids.add(product_id)

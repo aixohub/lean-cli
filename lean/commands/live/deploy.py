@@ -343,10 +343,10 @@ def deploy(project: Path,
     build_and_configure_modules(addon_module, cli_addon_modules, organization_id, lean_config,
                                 kwargs, logger, environment_name, container_module_version)
 
-    if container.platform_manager.is_host_arm():
-        if "InteractiveBrokersBrokerage" in lean_config["environments"][environment_name]["live-mode-brokerage"] \
-                or any("InteractiveBrokersBrokerage" in dataQueue for dataQueue in lean_config["environments"][environment_name]["data-queue-handler"]):
-            raise RuntimeError(f"InteractiveBrokers is currently not supported for ARM hosts")
+    # if container.platform_manager.is_host_arm():
+    #     if "InteractiveBrokersBrokerage" in lean_config["environments"][environment_name]["live-mode-brokerage"] \
+    #             or any("InteractiveBrokersBrokerage" in dataQueue for dataQueue in lean_config["environments"][environment_name]["data-queue-handler"]):
+    #         raise RuntimeError(f"InteractiveBrokers is currently not supported for ARM hosts")
 
     lean_runner = container.lean_runner
     lean_runner.run_lean(lean_config,

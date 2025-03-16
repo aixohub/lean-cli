@@ -30,10 +30,71 @@ from AlgorithmImports import *
 class $CLASS_NAME$(QCAlgorithm):
 
     def initialize(self):
-        # Locally Lean installs free sample data, to download more data please visit https://www.quantconnect.com/docs/v2/lean-cli/datasets/downloading-data
-        self.set_start_date(2013, 10, 7)  # Set Start Date
-        self.set_end_date(2013, 10, 11)  # Set End Date
-        self.set_cash(100000)  # Set Strategy Cash
+        self.set_start_date(2024, 10, 1)  # Set Start Date
+        self.set_end_date(2024, 12, 24)  # Set End Date
+        self.set_cash(10000)  # Set Strategy Cash
+        self.add_equity("SPY", Resolution.MINUTE)
+
+    def on_data(self, data: Slice):
+        """on_data event is the primary entry point for your algorithm. Each new data point will be pumped in here.
+            Arguments:
+                data: Slice object keyed by symbol containing the stock data
+        """
+        if not self.portfolio.invested:
+            self.set_holdings("SPY", 1)
+            self.debug("Purchased Stock")
+'''.strip() + "\n"
+
+
+
+STOCK_PYTHON_MAIN = '''
+# region imports
+from AlgorithmImports import *
+# endregion
+
+
+class $CLASS_NAME$(QCAlgorithm):
+    """
+    stock
+    """
+    def initialize(self):
+        self.set_start_date(2024, 10, 1)  # Set Start Date
+        self.set_end_date(2024, 12, 24)  # Set End Date
+        self.set_cash(10000)  # Set Strategy Cash
+        self.add_equity("SPY", Resolution.MINUTE)
+
+    def on_data(self, data: Slice):
+        """on_data event is the primary entry point for your algorithm. Each new data point will be pumped in here.
+            Arguments:
+                data: Slice object keyed by symbol containing the stock data
+        """
+        if not self.portfolio.invested:
+            self.set_holdings("SPY", 1)
+            self.debug("Purchased Stock")
+
+    def on_order_event(self, order_event: OrderEvent) -> None:
+        order = self.transactions.get_order_by_id(order_event.order_id)
+        self.log(f"{self.time}: {order.type} : {order_event}")
+        if order_event.status == OrderStatus.FILLED:
+            self.debug(f"{self.time}: {order.type} {order.symbol}: {order_event}")
+
+'''.strip() + "\n"
+
+
+
+OPTION_PYTHON_MAIN = '''
+# region imports
+from AlgorithmImports import *
+# endregion
+
+class $CLASS_NAME$(QCAlgorithm):
+    """
+    option
+    """
+    def initialize(self):
+        self.set_start_date(2024, 10, 1)  # Set Start Date
+        self.set_end_date(2024, 12, 24)  # Set End Date
+        self.set_cash(10000)  # Set Strategy Cash
         self.add_equity("SPY", Resolution.MINUTE)
 
     def on_data(self, data: Slice):
@@ -454,7 +515,13 @@ Please remove the character '{problematic_char}' and retry""")
     if language == "python":
         main_name = "main.py" if not is_library_project else "Library.py"
         research_name = "research.ipynb"
-        main_content = DEFAULT_PYTHON_MAIN if not is_library_project else LIBRARY_PYTHON_MAIN
+        main_content = DEFAULT_PYTHON_MAIN
+        if  is_library_project:
+            main_content = LIBRARY_PYTHON_MAIN
+        elif "stock" in full_path.name:
+            main_content = STOCK_PYTHON_MAIN
+        elif "option" in full_path.name:
+            main_content = OPTION_PYTHON_MAIN
     else:
         main_name = "Main.cs" if not is_library_project else "Library.cs"
         research_name = "Research.ipynb"

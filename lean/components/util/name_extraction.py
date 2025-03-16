@@ -23,6 +23,13 @@ def _capitalize(word: str) -> str:
         return word
     return word[0].upper() + word[1:]
 
+def capitalize_after_underscore(s):
+    """
+    将字符串的首字母和下划线后的第一个字母大写
+    """
+    parts = s.split("-")
+    capitalized_parts = [part.capitalize() for part in parts]  # 每个部分首字母大写
+    return "-".join(capitalized_parts)  # 用 _ 重新拼接
 
 def convert_to_class_name(file_path: Path):
     """Converts the project name into a valid class name by removing all non-alphanumeric characters
@@ -30,5 +37,10 @@ def convert_to_class_name(file_path: Path):
     :param file_path: Path to the root project
     :return: returns a valid class name
     """
+
     from re import sub
-    return sub(f"[^a-zA-Z0-9]", "", "".join(map(_capitalize, file_path.name.split(" "))))
+    print(file_path.name)
+    # 按空格分割文件名，并对每个部分调用 capitalize_after_underscore
+    # 移除非字母数字字符
+    return sub(f"[^a-zA-Z0-9]", "", "".join(map(capitalize_after_underscore, file_path.name.split(" "))))
+    # return sub(f"[^a-zA-Z0-9]", "", "".join(map(_capitalize, file_path.name.split(" "))))
