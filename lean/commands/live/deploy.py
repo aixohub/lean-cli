@@ -194,7 +194,7 @@ def deploy(project: Path,
             history_providers = lean_environment["history-provider"]
             if type(history_providers) is not list:
                 history_providers = [history_providers]
-            logger.debug(f'Deploy(): loading env \'{environment_name}\'. Brokerage: \'{brokerage}\'. IDQHs: '
+            logger.info(f'Deploy(): loading env \'{environment_name}\'. Brokerage: \'{brokerage}\'. IDQHs: '
                          f'{data_provider_live}. HistoryProviders: {history_providers}')
         else:
             logger.info(f'Environment \'{environment_name}\' not found, creating from scratch')

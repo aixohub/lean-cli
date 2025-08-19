@@ -42,6 +42,18 @@ class ModuleClient:
 
         return data["url"]
 
+    def get_nuget_link(self,  file_name: str, file_version: str) -> str:
+        """Returns the download link to a module's file.
+
+        :param product_id: the product id of the module
+        :param organization_id: the id of the organization holding a license for the module
+        :param file_name: the name of the module's file to download
+        :return: the download link to the file
+        """
+        url = f"https://www.nuget.org/api/v2/package/{file_name}/{file_version}"
+
+        return url
+
     def list_files(self, product_id: int, organization_id: str) -> List[str]:
         """Lists the most recent files of a module.
 

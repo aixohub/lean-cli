@@ -38,4 +38,4 @@ def run_lean_project_create(project_path: str):
 if __name__ == "__main__":
     args = ["live", "deploy", "--environment=live-interactive", "/Users/jupyter/work/code/github/lean-cli/trade"]
     run_lean_live(args)
-   #run_lean_project_create("stock-nvda")
+    # run_lean_project_create("stock-nvda")

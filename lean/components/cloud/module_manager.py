@@ -80,7 +80,7 @@ class ModuleManager:
                 self._logger.debug(f'Package "{package.name}" does not have the specified version {module_version}. '
                                    f'Using available version {package.version} instead.')
             if package.name== "QuantConnect.Brokerages.InteractiveBrokers":
-                package.version= "2.5.17244"
+                package.version= "2.5.17219"
             self._download_file(product_id, organization_id, package)
 
         self._installed_product_ids.add(product_id)
@@ -120,7 +120,7 @@ class ModuleManager:
         """
 
         package_file = Path(MODULES_DIRECTORY) / package.get_file_name()
-        
+
         if package_file.is_file():
             from zipfile import ZipFile, BadZipFile
             from contextlib import suppress
@@ -136,14 +136,14 @@ class ModuleManager:
                         return
 
             self._logger.info(f"{package_file.name} exists but is corrupted. Downloading again...")
-            
+
             from os import remove
             remove(package_file)
 
         self._logger.info(f"Downloading '{package_file.name}'")
 
         package_file.parent.mkdir(parents=True, exist_ok=True)
-        link = self._api_client.modules.get_link(product_id, organization_id, package_file.name)
+        link = self._api_client.modules.get_nuget_link(package.name, package.version)
         try:
             with self._http_client.get(link, stream=True) as response:
                 with package_file.open("wb+") as file:
