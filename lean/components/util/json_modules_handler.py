@@ -123,7 +123,7 @@ def interactive_config_build(lean_config: Dict[str, Any], models: [JsonModule], 
 def _update_settings(logger: Logger, environment_name: str, module: JsonModule,
                      lean_config: Dict[str, Any]) -> None:
     settings = module.get_settings()
-    logger.debug(f'_update_settings({module}): Settings: {settings}')
+    logger.info(f'_update_settings({module}): Settings: {settings}')
 
     if environment_name:
         if "environments" not in lean_config:
@@ -139,7 +139,7 @@ def _update_settings(logger: Logger, environment_name: str, module: JsonModule,
             from json import loads
             if isinstance(target[key], str) and target[key].startswith("["):
                 # it already exists, and it's an array we need to merge
-                logger.debug(f'_update_settings({module}): target[key]: {target[key]}')
+                logger.info(f'_update_settings({module}): target[key]: {target[key]}')
                 existing_value = loads(target[key])
                 if value.startswith("["):
                     # the new value is also an array, merge them

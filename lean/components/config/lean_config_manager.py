@@ -240,6 +240,11 @@ class LeanConfigManager:
 
         from lean.components.util.organization_manager import get_organization
 
+        ib_host = self._project_config_manager.get_config_from_project_config(
+            algorithm_file.parent if algorithm_file else None, "ib-host", "host.docker.internal")
+        ib_port = self._project_config_manager.get_config_int_from_project_config(
+            algorithm_file.parent if algorithm_file else None, "ib-port", 7496)
+
         # The following key -> value pairs are added to the config unless they are already set by the user
         config_defaults = {
             "job-user-id": self._cli_config_manager.user_id.get_value(default="0"),
@@ -248,8 +253,8 @@ class LeanConfigManager:
             "project-id": self._project_config_manager.get_project_id_from_project_config(
                 algorithm_file.parent if algorithm_file else None),
 
-            "ib-host": "127.0.0.1",
-            "ib-port": "4002",
+            "ib-host": ib_host,
+            "ib-port": ib_port,
             "ib-tws-dir": "/root/Jts",
 
             "iqfeed-host": "host.docker.internal"

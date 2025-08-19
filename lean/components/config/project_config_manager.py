@@ -67,6 +67,52 @@ class ProjectConfigManager:
         project_config.set("local-id", project_id)
 
         return project_id
+    
+    def get_config_int_from_project_config(self, project_directory: Path, config_key: str, default: int) -> int:
+        """
+        Resolves the project ID from the configuration.
+
+        Args:
+            project_directory (Path): The directory of the project. If None,
+                                      it indicates the directory is unavailable.
+
+        Returns:
+            int: Returns the 'cloud-id' if available.
+                 If 'cloud-id' is missing, returns the negative of 'local-id'.
+        """
+        if project_directory is None:
+            return default
+
+        project_config = self.get_project_config(project_directory)
+
+        cloud_id = project_config.get(config_key)
+        if cloud_id is not None:
+            return cloud_id
+
+        return default
+
+    def get_config_from_project_config(self, project_directory: Path, config_key: str, default: str) -> str:
+        """
+        Resolves the project ID from the configuration.
+
+        Args:
+            project_directory (Path): The directory of the project. If None,
+                                      it indicates the directory is unavailable.
+
+        Returns:
+            int: Returns the 'cloud-id' if available.
+                 If 'cloud-id' is missing, returns the negative of 'local-id'.
+        """
+        if project_directory is None:
+            return default
+
+        project_config = self.get_project_config(project_directory)
+
+        cloud_id = project_config.get(config_key)
+        if cloud_id is not None:
+            return cloud_id
+
+        return default
 
     def get_project_id_from_project_config(self, project_directory: Path) -> int:
         """

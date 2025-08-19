@@ -29,21 +29,45 @@ from AlgorithmImports import *
 
 class $CLASS_NAME$(QCAlgorithm):
 
+    def __init__(self):
+        super().__init__()
+        self._symbol = None
+        self._bid_size = 0
+        self._ask_size = 0
+
     def initialize(self):
-        # Locally Lean installs free sample data, to download more data please visit https://www.quantconnect.com/docs/v2/lean-cli/datasets/downloading-data
-        self.set_start_date(2013, 10, 7)  # Set Start Date
-        self.set_end_date(2013, 10, 11)  # Set End Date
+        self.set_start_date(2025, 10, 7)  # Set Start Date
+        self.set_end_date(2025, 10, 11)  # Set End Date
         self.set_cash(100000)  # Set Strategy Cash
-        self.add_equity("SPY", Resolution.MINUTE)
+
+        self._symbol = self.add_equity(symbol, Resolution.TICK).symbol
 
     def on_data(self, data: Slice):
         """on_data event is the primary entry point for your algorithm. Each new data point will be pumped in here.
             Arguments:
                 data: Slice object keyed by symbol containing the stock data
         """
+        if slice.ticks.contains_key(self._symbol):
+            ticks = slice.ticks[self._symbol]
+            time = slice.time
+
+            # Iterate all related ticks to calculate the bid and ask sizes.
+            for tick in ticks:
+                self._bid_size += tick.bid_size
+                self._ask_size += tick.ask_size
+                if tick.bid_size == 0:
+                    continue
+                else:
+                    self.log(f"time {time} bid_price: {tick.bid_price}, bid_size: {tick.bid_size}, ask_price: {tick.ask_price} ask_size: {tick.ask_size}")
+
+
         if not self.portfolio.invested:
-            self.set_holdings("SPY", 1)
+            self.set_holdings("nvda", 1)
             self.debug("Purchased Stock")
+    
+    def on_end_of_algorithm(self):
+        self.log(f"****** End of algorithm ****** -  Current position: {self._symbol} : {self.portfolio[self._symbol].quantity} shares")
+
 '''.strip() + "\n"
 
 LIBRARY_PYTHON_MAIN = '''
