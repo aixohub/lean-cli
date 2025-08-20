@@ -27,6 +27,8 @@ DEFAULT_PYTHON_MAIN = '''
 from AlgorithmImports import *
 # endregion
 
+symbol ="nvda"
+
 class $CLASS_NAME$(QCAlgorithm):
 
     def __init__(self):
@@ -38,7 +40,10 @@ class $CLASS_NAME$(QCAlgorithm):
     def initialize(self):
         self.set_start_date(2025, 10, 7)  # Set Start Date
         self.set_end_date(2025, 10, 11)  # Set End Date
-        self.set_cash(100000)  # Set Strategy Cash
+        self.set_cash(1000)  # Set Strategy Cash
+
+        self.set_brokerage_model(BrokerageName.INTERACTIVE_BROKERS_BROKERAGE, AccountType.MARGIN)
+
 
         self._symbol = self.add_equity(symbol, Resolution.TICK).symbol
 
@@ -47,6 +52,10 @@ class $CLASS_NAME$(QCAlgorithm):
             Arguments:
                 data: Slice object keyed by symbol containing the stock data
         """
+
+        if self.is_warming_up:
+            return
+
         if slice.ticks.contains_key(self._symbol):
             ticks = slice.ticks[self._symbol]
             time = slice.time
@@ -64,7 +73,7 @@ class $CLASS_NAME$(QCAlgorithm):
         if not self.portfolio.invested:
             self.set_holdings("nvda", 1)
             self.debug("Purchased Stock")
-    
+
     def on_end_of_algorithm(self):
         self.log(f"****** End of algorithm ****** -  Current position: {self._symbol} : {self.portfolio[self._symbol].quantity} shares")
 
